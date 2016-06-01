@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Direct Slickdeals
 // @namespace    github.com/zanetu
-// @version      1.2
+// @version      1.3
 // @description  Removes Slickdeals redirects and automatically opens forum threads of frontpage deals.
 // @include      /^http\:\/\/slickdeals\.net\/[a-z]\/\d+/
 // @include      /^http\:\/\/slickdeals\.net\/forums\/showthread\.php/
@@ -17,7 +17,7 @@
 	var threadContainer = document.getElementById('comments')
 		|| document.getElementsByClassName('viewForumThread')[0]
 	var thread = threadContainer && threadContainer.getElementsByTagName('a')[0]
-	if(thread && thread.href) {
+	if(thread && thread.href && location.href !== thread.href) {
 		location.href = thread.href
 		return
 	}
