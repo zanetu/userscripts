@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Direct Slickdeals
 // @namespace    github.com/zanetu
-// @version      1.3
+// @version      1.4
 // @description  Removes Slickdeals redirects and automatically opens forum threads of frontpage deals.
-// @include      /^http\:\/\/slickdeals\.net\/[a-z]\/\d+/
-// @include      /^http\:\/\/slickdeals\.net\/forums\/showthread\.php/
+// @include      /^https?\:\/\/slickdeals\.net\/[a-z]\/\d+/
+// @include      /^https?\:\/\/slickdeals\.net\/forums\/showthread\.php/
 // @author       zanetu
 // @license      GPL version 2 or any later version; http://www.gnu.org/licenses/gpl-2.0.txt
 // @grant        none
