@@ -17,7 +17,7 @@
 	var threadContainer = document.getElementById('comments')
 		|| document.getElementsByClassName('viewForumThread')[0]
 	var thread = threadContainer && threadContainer.getElementsByTagName('a')[0]
-	if(thread && thread.href && location.href !== thread.href) {
+	if(thread && thread.href && location.href !== thread.href && !location.hash) {
 		location.href = thread.href
 		return
 	}
