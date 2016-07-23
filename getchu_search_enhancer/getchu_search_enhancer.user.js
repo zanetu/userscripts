@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Getchu Search Enhancer
 // @namespace    github.com/zanetu
-// @version      0.8
+// @version      0.9
 // @description  Enhances adult anime search on getchu.com by collapsing rehash (with Blu-ray marked in blue), 3D anime (marked in silver) and live action (marked in pink), according to title and brand. Does not work with thumbnail search results. 
 // @include      /^http\:\/\/([^\.\/]+\.)?getchu.com\/php\/search\.phtml\?(\w+\=[\w\%\+]*\&)*(age\=18\%3Alady|sub\_genre\%5B336\%5D\=1)(\&\w+\=[\w\%\+]*)*/
 // @author       zanetu
@@ -33,7 +33,7 @@
 			//rehash; usually cheap (remastered) edition
 			'cheap_edition': {
 				're': [
-				/(Re：|Best\s)Price|ザ・ベスト|(完全|復刻|廉価)版/,
+				/(Re：|(Best|Value)\s)Price|ザ・ベスト|(完全|復刻|廉価)版/,
 				/(Complete|Perfect|Best|Excellent|Final|Glamorous)\s(Edition|Collection)/,
 				/コンプリート(コレクション|版|ディスク)|ゴールドディスク|メガ盛り|声優/,
 				/Blu\-ray\sHD|Blu\-ray版(?!$)|[^ル]\bBOX\b|\bPack\b|Special\sEdition(?!$)/,
@@ -41,6 +41,7 @@
 				/^(ぺろぺろ☆てぃーちゃー(?!\s全)|鬼父\sチョビんぽパック\s)/,
 				/^GEシリーズ\s/,
 				/^(夜勤病棟ヒロインシリーズ|ぽ～じゅ|義母っつうても人の嫁じゃん|イヤですか？)\s/,
+				/^念願の処女・/,
 				/(プチベストセレクション|・真行寺由奈編|・神無月舞編)$/,
 				/^(アッチェレランド|ストリンジェンド)パック$/,
 				/\b((SPECIAL|NICE)\sPRICE|complete\sversion)\b/,

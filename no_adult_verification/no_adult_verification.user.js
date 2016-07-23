@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         No Adult Verification
 // @namespace    http://userscripts.org/users/92143
-// @version      2.7
+// @version      2.8
 // @description  Skips adult verification of getchu.com and the like. 绕过Getchu等网站的成人检测。
 // @include      /^http\:\/\/([^\.\/]+\.)?getchu\.com\//
 // @include      /^http\:\/\/([^\.\/]+\.)?(dm5|jpmanga)\.com\//
 // @include      /^http\:\/\/([^\.\/]+\.)?dlsite\.com\//
-// @include      /^http\:\/\/([^\.\/]+\.)?amazon\.co\.jp\//
+// @include      /^https?\:\/\/([^\.\/]+\.)?amazon\.co\.jp\//
 // @include      /^https?\:\/\/([^\.]*\.)?toranoana\.jp\//
 // @include      /^http\:\/\/bt\.orzx\.im\/list\.php\?BoardID\=2\&ItemID\=17/
 // @include      /^http\:\/\/rule34\.paheal\.net\//
@@ -161,13 +161,13 @@ while(i--) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-	if(/^http\:\/\/([^\.\/]+\.)?amazon\.co\.jp/.test(url)) {
+	if(/^https?\:\/\/([^\.\/]+\.)?amazon\.co\.jp/.test(url)) {
 		processAmazonCoJp()
 	}
 }, false)
 
 function processAmazonCoJp() {
-	var yes = $('a[href^="/gp/product/black-curtain-redirect.html"]').get(0)
+	var yes = $('a[href*="/gp/product/black-curtain-redirect.html"]').get(0)
 	if(yes) {
 		yes.click()
 	}
@@ -177,7 +177,7 @@ function processAmazonCoJp() {
 			method: 'GET', 
 			url: u, 
 			onload: function(r1) {
-				var m = /href\=\"(\/gp\/product\/black\-curtain\-redirect\.html.*?)\"/.exec(r1.responseText)
+				var m = /(\/gp\/product\/black\-curtain\-redirect\.html.*?)\"/.exec(r1.responseText)
 				m && m[1] && GM_xmlhttpRequest({
 					method: 'HEAD', 
 					url: 'http://www.amazon.co.jp' + m[1], 
