@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         No Adult Verification
 // @namespace    http://userscripts.org/users/92143
-// @version      2.8
+// @version      2.9
 // @description  Skips adult verification of getchu.com and the like. 绕过Getchu等网站的成人检测。
 // @include      /^http\:\/\/([^\.\/]+\.)?getchu\.com\//
 // @include      /^http\:\/\/([^\.\/]+\.)?(dm5|jpmanga)\.com\//
@@ -11,9 +11,10 @@
 // @include      /^http\:\/\/bt\.orzx\.im\/list\.php\?BoardID\=2\&ItemID\=17/
 // @include      /^http\:\/\/rule34\.paheal\.net\//
 // @include      /^http\:\/\/(www\.)?lune\-soft\.jp\/$/
-// @include      /^https?\:\/\/(www\.)?a1c\.jp\/\~(chuchu|grandcru|majin|shelf)\/$/
+// @include      /^https?\:\/\/(www\.)?a1c\.jp\/$/
+// @include      /^https?\:\/\/(www\.)?a1c\.jp\/\~(chuchu|grandcru|majin|shelf|collabo)\/$/
 // @include      /^https?\:\/\/(www\.)?a1c\.jp\/a1c\-ch\/$/
-// @include      /^http\:\/\/(www\.)?(call\-it\-anything\.net|komagata\.biz|poro\.cc|suzukimirano\.com)\/$/
+// @include      /^http\:\/\/(www\.)?(komagata\.biz|poro\.cc|suzukimirano\.com)\/$/
 // @include      /^http\:\/\/(www\.)?chichinoya\.jp\/$/
 // @include      /^http\:\/\/(www\.)?el-soft\.jp\/$/
 // @include      /^http\:\/\/(www\.)?ordin\-soft\.com\/$/
@@ -70,7 +71,12 @@ var dataArray = [{
 	flagOrPath: 'over18='
 }, {
 	//a1c
-	site: /^https?\:\/\/(www\.)?a1c\.jp\/\~(chuchu|grandcru|majin|shelf)\/$/, 
+	site: /^https?\:\/\/(www\.)?a1c\.jp\/$/, 
+	cookies: [], 
+	flagOrPath: 'https://www.a1c.club/'
+}, {
+	//a1c
+	site: /^https?\:\/\/(www\.)?a1c\.jp\/\~(chuchu|grandcru|majin|shelf|collabo)\/$/, 
 	cookies: [], 
 	flagOrPath: 'top.html'
 }, {
@@ -80,7 +86,7 @@ var dataArray = [{
 	flagOrPath: 'main.htm'
 }, {
 	//a1c
-	site: /^http\:\/\/(www\.)?(call\-it\-anything\.net|komagata\.biz|poro\.cc|suzukimirano\.com)\/$/, 
+	site: /^http\:\/\/(www\.)?(komagata\.biz|poro\.cc|suzukimirano\.com)\/$/, 
 	cookies: [], 
 	flagOrPath: 'top.html'
 }, {
@@ -142,7 +148,7 @@ while(i--) {
 		if(fOrP) {
 			var siteCookies = dataArray[i].cookies
 			if(!siteCookies.length) {
-				location.replace(url + fOrP)
+				location.replace(fOrP.indexOf('http') ? url + fOrP : fOrP)
 			}
 			else {
 				var isNew = (-1 === document.cookie.indexOf(fOrP))

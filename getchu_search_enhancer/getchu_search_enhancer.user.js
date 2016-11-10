@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Getchu Search Enhancer
 // @namespace    github.com/zanetu
-// @version      0.9
+// @version      1.0
 // @description  Enhances adult anime search on getchu.com by collapsing rehash (with Blu-ray marked in blue), 3D anime (marked in silver) and live action (marked in pink), according to title and brand. Does not work with thumbnail search results. 
 // @include      /^http\:\/\/([^\.\/]+\.)?getchu.com\/php\/search\.phtml\?(\w+\=[\w\%\+]*\&)*(age\=18\%3Alady|sub\_genre\%5B336\%5D\=1)(\&\w+\=[\w\%\+]*)*/
 // @author       zanetu
@@ -27,27 +27,27 @@
 	var PINK = '#ffc0cb'
 	var SILVER = '#c0c0c0'
 	var BLUE = '#b2ffff'
+	var SKYBLUE = '#87ceeb'
+	var YELLOW = '#ffff00'
 	var CLASS_INFO = {
 		//title-based classes
 		'ul.display a.blueb': {
 			//rehash; usually cheap (remastered) edition
 			'cheap_edition': {
 				're': [
-				/(Re：|(Best|Value)\s)Price|ザ・ベスト|(完全|復刻|廉価)版/,
-				/(Complete|Perfect|Best|Excellent|Final|Glamorous)\s(Edition|Collection)/,
+				/(Re：|(Best|Value))\ ?Price|Royal\ asset|ザ・ベスト|(完全|復刻|廉価)版/,
+				/(Complete|Perfect|Best|Excellent|Final|Glamorous|Special)\ (Edi|Collec|Selec)tion/,
 				/コンプリート(コレクション|版|ディスク)|ゴールドディスク|メガ盛り|声優/,
-				/Blu\-ray\sHD|Blu\-ray版(?!$)|[^ル]\bBOX\b|\bPack\b|Special\sEdition(?!$)/,
-				/リニューアルリミテッド|バイノーラル|総集編|傑作選|再販|特価|[^\・]コレクション/,
-				/^(ぺろぺろ☆てぃーちゃー(?!\s全)|鬼父\sチョビんぽパック\s)/,
-				/^GEシリーズ\s/,
-				/^(夜勤病棟ヒロインシリーズ|ぽ～じゅ|義母っつうても人の嫁じゃん|イヤですか？)\s/,
-				/^念願の処女・/,
+				/Blu\-ray HD|Blu\-ray版(?!$)|[^ル]\bBOX\b|\bPack\b/,
+				/リニューアルリミテッド|バイノーラル|総集編|傑作選|再販|特価/,
+				/[^\・]コレクション|これくしょん|セレクション|パック|セット/,
+				/^GEシリーズ /,
+				/^(夜勤病棟ヒロインシリーズ|ぽ～じゅ|ぺろぺろ☆てぃーちゃー(?! 全)) /,
 				/(プチベストセレクション|・真行寺由奈編|・神無月舞編)$/,
-				/^(アッチェレランド|ストリンジェンド)パック$/,
-				/\b((SPECIAL|NICE)\sPRICE|complete\sversion)\b/,
-				/\b(the\sguilty\sparty|SEXFRIEND\sExtend|BEST\sThe|fuzzy\ lips\ 0＋1)\b/,
-				/(\bComplete|\b(Special|Complete)～|～\sLimited)$/,
-				/\b(THE\sBEST|Collectors)\b/i,
+				/\b((SPECIAL|NICE) PRICE|complete version)\b/,
+				/\b(the guilty party|SEXFRIEND Extend|BEST The|fuzzy\ lips\ 0＋1)\b/,
+				/(\bComplete|\b(Special|Complete)～|～ Limited)$/,
+				/\b(THE BEST|Collectors)\b/i
 				],
 				'collapses': true,
 				'backgroundColor': null,
@@ -61,6 +61,15 @@
 				'collapses': true,
 				'backgroundColor': PINK,
 				'hides': false
+			},
+			//special edition; may be cheap edition
+			'special_edition': {
+				're': [
+				/\＜初回版\＞|\[抱き枕カバー付き\]|限定版/
+				],
+				'collapses': true,
+				'backgroundColor': YELLOW,
+				'hides': false
 			}
 		},
 		//detail-based classes
@@ -68,8 +77,8 @@
 			//3d (doujin) anime
 			'doujin_dvd_edition': {
 				're': [
-				/ブランド名：\s(ホビコレ|WORLD\sPG|SPRECHCHOR|WTC\-project|ミルクキャンディー)/,
-				/ブランド名：\s(アーカムプロダクツ\s\/\sチーム暗黒媒体|テクニカルスタッフ)/
+				/ブランド名： (ホビコレ|WORLD PG|SPRECHCHOR|WTC\-project|ミルクキャンディー)/,
+				/ブランド名： (アーカムプロダクツ \/ チーム暗黒媒体|テクニカルスタッフ)/
 				],
 				'collapses': true,
 				'backgroundColor': SILVER,
@@ -78,18 +87,26 @@
 			//blu-ray edition
 			//ignore "DVD-VIDEO" with "Blu-ray" in title, e.g. www.getchu.com/soft.phtml?id=855727
 			'bluray_edition': {
-				're': /メディア：\sBD\-VIDEO/,
+				're': /メディア： BD\-VIDEO/,
 				'collapses': false,
 				'backgroundColor': BLUE,
 				'hides': false
 			},
 			//live action
 			'live_action': {
-				're': /ブランド名：\sEドラ！/,
+				're': /ブランド名： Eドラ！/,
 				'collapses': true,
 				'backgroundColor': PINK,
 				'hides': false
-			}
+			},
+			//vanilla released nothing but rehashes after 2012/10/19
+			// and has been using random titles since 2016/05/13
+			'vanilla_cheap_edition': {
+				're': /ブランド名： バニラ/,
+				'collapses': true,
+				'backgroundColor': SKYBLUE,
+				'hides': false
+			},
 		}
 	}
 	
@@ -97,8 +114,9 @@
 	for (var selector in CLASS_INFO) {
 		$(selector).each(function() {
 			for (var className in CLASS_INFO[selector]) {
-				var item = CLASS_INFO[selector][className]
-				if (item && item['re'] && testArray(item['re'], $(this).text().trim())) {
+				var info = CLASS_INFO[selector][className] || {}
+				if (info['re'] && testRe(info['re'], $(this).text().trim())
+						|| info['id'] && testId(info['id'], $(this).attr('href'))) {
 					$(this).closest('li').addClass(className)
 				}
 			}
@@ -113,21 +131,21 @@
 		var css = ''
 		for (var selector in CLASS_INFO) {
 			for (var className in CLASS_INFO[selector]) {
-				var item = CLASS_INFO[selector][className]
+				var info = CLASS_INFO[selector][className]
 				//className can't be an empty string
-				if (item && className) {
+				if (info && className) {
 					var s = '.' + className
-					if (item['hides']) {
+					if (info['hides']) {
 						css += s + CSS_HIDDEN
 					}
 					//may not be needed
 					else {
-						if (item['collapses']) {
+						if (info['collapses']) {
 							css += s + CSS_COLLAPSED + s + ':hover' + CSS_UNCOLLAPSED
 						}
-						if (item['backgroundColor']) {
+						if (info['backgroundColor']) {
 							css += s + ', ' + s + ' * {background-color: '
-							+ item['backgroundColor'] + ' !important;} '
+							+ info['backgroundColor'] + ' !important;} '
 						}
 					}
 				}
@@ -136,7 +154,7 @@
 		return css
 	}
 	
-	function testArray(reArray, text) {
+	function testRe(reArray, text) {
 		if (reArray instanceof Array) {
 			for (var i = 0, l = reArray.length; i < l; i++) {
 				if (reArray[i] instanceof RegExp && reArray[i].test(text)) {
@@ -148,6 +166,11 @@
 			return true
 		}
 		return false
+	}
+	
+	function testId(idObject, href) {
+		var id = href && href.split && href.split('id=').pop()
+		return id && id !== href && idObject && idObject.hasOwnProperty(id)
 	}
 	
 })()
