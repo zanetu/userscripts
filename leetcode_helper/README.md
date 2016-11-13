@@ -3,4 +3,4 @@
 
 **Install:** [Stable](https://rawgit.com/zanetu/userscripts/master/leetcode_helper/leetcode_helper.user.js)
 
-#### A userscript that enhances leetcode.com by providing a sort-by-votes "Discuss" button.
+#### A userscript that enhances leetcode.com.
