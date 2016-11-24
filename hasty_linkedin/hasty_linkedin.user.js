@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Hasty LinkedIn
 // @namespace    github.com/zanetu
-// @version      0.99
+// @version      0.99.1
 // @description  Expedites job hunting on linkedin.com.
-// @include      /^https?\:\/\/(www\.)?linkedin\.com\//
+// @include      /^https?\:\/\/(www\.)?linkedin\.com\/(jobs|company)\//
 // @author       zanetu
 // @license      GPL version 2 or any later version; http://www.gnu.org/licenses/gpl-2.0.txt
 // @grant        none
@@ -11,23 +11,47 @@
 // @noframes
 // ==/UserScript==
 
+//expand job details and company info
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver
-if(MutationObserver) {
-	var observer = new MutationObserver(function(mutations) {
-		handleMutation()
-	})
-	observer.observe(document.documentElement, {
+if (MutationObserver) {
+	new MutationObserver(handleChange).observe(document.documentElement, {
 		childList: true,
 		subtree: true
 	})
-	handleMutation()
 }
-function handleMutation() {
+//for chrome v18-, firefox v14-, internet explorer v11-, opera v15- and safari v6-
+else {
+	setInterval(handleChange, 500)
+}
+handleChange()
+function handleChange() {
+	//job details
 	var jd = document.querySelector('.description-module[style*="height:"]')
 	var jdButton = jd && jd.parentNode.querySelector('#job-details-reveal[aria-expanded="false"]')
-	if(jdButton) {
-		jdButton.click()
+	jdButton && jdButton.click()
+	//company info
+	var biButton = document.querySelector('.basic-info.state-viewmore .view-more-bar')
+	biButton && biButton.click()
+}
+var s = document.createElement('style')
+s.type = 'text/css', s.appendChild(document.createTextNode(
+	//view more jobs
+	'.expand-button-container,.spinner {visibility: hidden !important;}'
+	+ ' .loader-container {display: none !important;}'
+)), document.documentElement.appendChild(s)
+var timer = setInterval(loadMoreJobs, 500)
+function loadMoreJobs() {
+	var moreJobsContainer = document.querySelector('.expand-button-container')
+	//no more jobs
+	if (moreJobsContainer && moreJobsContainer.style.display === 'none') {
+		clearInterval(timer)
+		return
 	}
-	var moreJobsButton = document.querySelector('button[data-control="seemorejobs"]')
-	moreJobsButton && moreJobsButton.click()
+	var moreJobsButton = moreJobsContainer.querySelector('button[data-control="seemorejobs"]')
+	if (moreJobsButton) {
+		var top = moreJobsButton.getBoundingClientRect().top;
+		if (top <= (window.innerHeight || document.documentElement.clientHeight) + 5000) {
+			moreJobsButton.click()
+		}
+	}
 }
