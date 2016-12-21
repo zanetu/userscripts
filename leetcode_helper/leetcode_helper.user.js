@@ -5,6 +5,7 @@
 // @description  Enhances leetcode.com.
 // @include      /^https?\:\/\/leetcode\.com\/problems\//
 // @include      /^https?\:\/\/leetcode\.com\/problemset\//
+// @include      /^https?\:\/\/leetcode\.com\/tag\/[^\/]+\//
 // @author       zanetu
 // @license      GPL version 2 or any later version; http://www.gnu.org/licenses/gpl-2.0.txt
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js
@@ -16,11 +17,11 @@
 //always show tags and similar problems
 $('<style>.hidebutton {display: inline !important;}'
 //always show spoilers
-+ ' .spoilers {display: block !important;}'
-//google premium problems
-+ ' i.fa-lock::after {content: "(Google)"; cursor: pointer;}</style>').appendTo('head')
++ ' .spoilers {display: block !important;}</style>')
+.appendTo('head')
 //always show tags, similar problems and spoilers
 $('#tags,#similar,[onclick^="showSpoilers("]').remove()
+$('#tagCheck').prop('checked', true)
 //hide/show premium problems
 var premiumStyle = $('<style>.premium-row {display: none !important;}</style>').appendTo('head')[0]
 $('<select/>').css('margin-left', '10px')
@@ -35,12 +36,7 @@ $('<select/>').css('margin-left', '10px')
 			break
 	}
 	localStorage.setItem('premium-select', this.value)
-}).val(localStorage.getItem('premium-select') || '0').change().insertBefore('.form-horizontal')
-//google premium problems
-$(document).on('click', 'i.fa-lock', function(e) {
-	var q = encodeURIComponent($(e.target).prev().text().trim() + ' -site:leetcode.com leetcode')
-	open('//www.google.com/search?q=' + q)
-})
+}).val(localStorage.getItem('premium-select') || '0').change().insertBefore('#question-app')
 //never subscribe to see which companies asked this question
 $('[href="/subscribe/"]').parent().remove()
 //detect premium problems
@@ -62,6 +58,19 @@ else {
 	}, 500)
 }
 function handleMutation() {
-	//label premium problems
-	$('tr:has(i.fa-lock)').addClass('premium-row')
+	//premium problems
+	$('i.fa-lock:not(.processed)').addClass('processed').each(function() {
+		//discuss premium problems
+		$('<a> (Discuss)</a>')
+		.attr('href', '//discuss.leetcode.com/category/'
+				+ (parseInt($(this).closest('td').prev().text()) + 8))
+		.attr('target', '_blank').insertAfter(this)
+		//google premium problems
+		$('<a> (Google)</a>')
+		.attr('href', '//www.google.com/search?q=' + encodeURIComponent(
+				$(this).prev().text().trim() + ' -site:leetcode.com leetcode'
+			)
+		)
+		.attr('target', '_blank').insertAfter(this)
+	}).closest('tr').addClass('premium-row')
 }
