@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Hasty LinkedIn
 // @namespace    github.com/zanetu
-// @version      0.99.1
+// @version      0.99.2
 // @description  Expedites job hunting on linkedin.com.
-// @include      /^https?\:\/\/(www\.)?linkedin\.com\/(jobs|company)\//
+// @include      /^https?\:\/\/(www\.)?linkedin\.com\/(jobs|company(-beta)?)\//
 // @author       zanetu
 // @license      GPL version 2 or any later version; http://www.gnu.org/licenses/gpl-2.0.txt
 // @grant        none
@@ -32,6 +32,9 @@ function handleChange() {
 	//company info
 	var biButton = document.querySelector('.basic-info.state-viewmore .view-more-bar')
 	biButton && biButton.click()
+	//company-beta info
+	downIcon = document.querySelector('[type="chevron-down-icon"]')
+	downIcon && downIcon.click()
 }
 var s = document.createElement('style')
 s.type = 'text/css', s.appendChild(document.createTextNode(
@@ -42,16 +45,18 @@ s.type = 'text/css', s.appendChild(document.createTextNode(
 var timer = setInterval(loadMoreJobs, 500)
 function loadMoreJobs() {
 	var moreJobsContainer = document.querySelector('.expand-button-container')
-	//no more jobs
-	if (moreJobsContainer && moreJobsContainer.style.display === 'none') {
-		clearInterval(timer)
-		return
-	}
-	var moreJobsButton = moreJobsContainer.querySelector('button[data-control="seemorejobs"]')
-	if (moreJobsButton) {
-		var top = moreJobsButton.getBoundingClientRect().top;
-		if (top <= (window.innerHeight || document.documentElement.clientHeight) + 5000) {
-			moreJobsButton.click()
+	if (moreJobsContainer) {
+		//no more jobs
+		if(moreJobsContainer.style.display === 'none') {
+			clearInterval(timer)
+			return
+		}
+		var moreJobsButton = moreJobsContainer.querySelector('button[data-control="seemorejobs"]')
+		if (moreJobsButton) {
+			var top = moreJobsButton.getBoundingClientRect().top;
+			if (top <= (window.innerHeight || document.documentElement.clientHeight) + 5000) {
+				moreJobsButton.click()
+			}
 		}
 	}
 }
