@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hasty LinkedIn
 // @namespace    github.com/zanetu
-// @version      0.99.2
+// @version      0.99.3
 // @description  Expedites job hunting on linkedin.com.
 // @include      /^https?\:\/\/(www\.)?linkedin\.com\/(jobs|company(-beta)?)\//
 // @author       zanetu
@@ -25,17 +25,38 @@ else {
 }
 handleChange()
 function handleChange() {
-	//job details
-	var jd = document.querySelector('.description-module[style*="height:"]')
-	var jdButton = jd && jd.parentNode.querySelector('#job-details-reveal[aria-expanded="false"]')
-	jdButton && jdButton.click()
-	//company info
-	var biButton = document.querySelector('.basic-info.state-viewmore .view-more-bar')
-	biButton && biButton.click()
-	//company-beta info
-	downIcon = document.querySelector('[type="chevron-down-icon"]')
-	downIcon && downIcon.click()
+	[].forEach.call(
+		document.querySelectorAll(
+			//expand job details
+			'[aria-expanded="false"][aria-controls="job-details"]' +
+			',' +
+			//expand company info
+			'[aria-expanded="false"][aria-controls="org-about-company-module"]'),
+		function(e) {
+			e.click()
+		}
+	)
 }
+//load more jobs you may be interested in
+var timer = setInterval(loadMoreJobs, 1000)
+function loadMoreJobs() {	
+	var moreJobsContainer = document.querySelector('.jobs-jymbii .fetch-more-items')
+	if (moreJobsContainer) {
+		//no more jobs
+		if(moreJobsContainer.style.display === 'none') {
+			clearInterval(timer)
+			return
+		}
+		var moreJobsButton = moreJobsContainer.querySelector('button')
+		if (moreJobsButton) {
+			var top = moreJobsButton.getBoundingClientRect().top
+			if (top <= (window.innerHeight || document.documentElement.clientHeight) + 5000) {
+				moreJobsButton.click()
+			}
+		}
+	}
+}
+/*
 var s = document.createElement('style')
 s.type = 'text/css', s.appendChild(document.createTextNode(
 	//view more jobs
@@ -60,3 +81,4 @@ function loadMoreJobs() {
 		}
 	}
 }
+*/

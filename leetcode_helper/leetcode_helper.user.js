@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LeetCode Helper
 // @namespace    github.com/zanetu
-// @version      0.99.1
+// @version      0.99.2
 // @description  Enhances leetcode.com.
 // @include      /^https?\:\/\/leetcode\.com\/problems\//
 // @include      /^https?\:\/\/leetcode\.com\/problemset\//
@@ -62,8 +62,10 @@ function handleMutation() {
 	$('i.fa-lock:not(.processed)').addClass('processed').each(function() {
 		//discuss premium problems
 		$('<a> (Discuss)</a>')
-		.attr('href', '//discuss.leetcode.com/category/'
-				+ (parseInt($(this).closest('td').prev().text()) + 8))
+		.attr('href', '//www.google.com/search?q=' + encodeURIComponent(
+				$(this).prev().text().trim() + ' site:leetcode.com "LeetCode Discuss"'
+			) + '&btnI'
+		)
 		.attr('target', '_blank').insertAfter(this)
 		//google premium problems
 		$('<a> (Google)</a>')

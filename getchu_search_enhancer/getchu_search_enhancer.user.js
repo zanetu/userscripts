@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Getchu Search Enhancer
 // @namespace    github.com/zanetu
-// @version      1.0
+// @version      1.1
 // @description  Enhances adult anime search on getchu.com by collapsing rehash (with Blu-ray marked in blue), 3D anime (marked in silver) and live action (marked in pink), according to title and brand. Does not work with thumbnail search results. 
 // @include      /^http\:\/\/([^\.\/]+\.)?getchu.com\/php\/search\.phtml\?(\w+\=[\w\%\+]*\&)*(age\=18\%3Alady|sub\_genre\%5B336\%5D\=1)(\&\w+\=[\w\%\+]*)*/
 // @author       zanetu
@@ -38,16 +38,16 @@
 				/(Re：|(Best|Value))\ ?Price|Royal\ asset|ザ・ベスト|(完全|復刻|廉価)版/,
 				/(Complete|Perfect|Best|Excellent|Final|Glamorous|Special)\ (Edi|Collec|Selec)tion/,
 				/コンプリート(コレクション|版|ディスク)|ゴールドディスク|メガ盛り|声優/,
-				/Blu\-ray HD|Blu\-ray版(?!$)|[^ル]\bBOX\b|\bPack\b/,
+				/Blu\-ray\ HD|Blu\-ray版(?!$)|[^ル]\bBOX\b/,
 				/リニューアルリミテッド|バイノーラル|総集編|傑作選|再販|特価/,
 				/[^\・]コレクション|これくしょん|セレクション|パック|セット/,
-				/^GEシリーズ /,
-				/^(夜勤病棟ヒロインシリーズ|ぽ～じゅ|ぺろぺろ☆てぃーちゃー(?! 全)) /,
+				/^GEシリーズ\ /,
+				/^(夜勤病棟ヒロインシリーズ|ぽ～じゅ|ぺろぺろ☆てぃーちゃー(?!\ 全))\ /,
 				/(プチベストセレクション|・真行寺由奈編|・神無月舞編)$/,
-				/\b((SPECIAL|NICE) PRICE|complete version)\b/,
-				/\b(the guilty party|SEXFRIEND Extend|BEST The|fuzzy\ lips\ 0＋1)\b/,
-				/(\bComplete|\b(Special|Complete)～|～ Limited)$/,
-				/\b(THE BEST|Collectors)\b/i
+				/\b((SPECIAL|NICE)\ PRICE|complete\ version|Contenant\ tous)\b/,
+				/\b(the\ guilty\ party|SEXFRIEND\ Extend|BEST\ The|fuzzy\ lips\ 0＋1)\b/,
+				/(\bComplete|\b(Special|Complete)～|～\ Limited)$/,
+				/\b(THE\ BEST|Collectors|Pack)\b/i
 				],
 				'collapses': true,
 				'backgroundColor': null,

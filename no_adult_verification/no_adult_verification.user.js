@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         No Adult Verification
 // @namespace    http://userscripts.org/users/92143
-// @version      2.9
+// @version      2.10
 // @description  Skips adult verification of getchu.com and the like. 绕过Getchu等网站的成人检测。
-// @include      /^http\:\/\/([^\.\/]+\.)?getchu\.com\//
-// @include      /^http\:\/\/([^\.\/]+\.)?(dm5|jpmanga)\.com\//
-// @include      /^http\:\/\/([^\.\/]+\.)?dlsite\.com\//
-// @include      /^https?\:\/\/([^\.\/]+\.)?amazon\.co\.jp\//
-// @include      /^https?\:\/\/([^\.]*\.)?toranoana\.jp\//
+// @include      /^http\:\/\/([^\.\/]+?\.)?getchu\.com\//
+// @include      /^http\:\/\/([^\.\/]+?\.)?(dm5|jpmanga)\.com\//
+// @include      /^http\:\/\/([^\.\/]+?\.)?dlsite\.com\//
+// @include      /^https?\:\/\/([^\.\/]+?\.)?amazon\.co\.jp\//
+// @include      /^https?\:\/\/([^\.\/]+?\.)?toranoana\.jp\//
 // @include      /^http\:\/\/bt\.orzx\.im\/list\.php\?BoardID\=2\&ItemID\=17/
 // @include      /^http\:\/\/rule34\.paheal\.net\//
 // @include      /^http\:\/\/(www\.)?lune\-soft\.jp\/$/
@@ -37,23 +37,23 @@ var url = location.href
 //year 2038 problem
 var EXPIRATION = 'expires=Tue, 19 Jan 2038 03:14:07 GMT;'
 var dataArray = [{
-	site: /^http\:\/\/([^\.]*\.)?getchu\.com\//, 
+	site: /^http\:\/\/([^\.\/]+?\.)?getchu\.com\//, 
 	cookies: ['getchu_adalt_flag=getchu.com;path=/;' + EXPIRATION], 
 	flagOrPath: 'getchu_adalt_flag='
 }, {
-	site: /^http\:\/\/([^\.]*\.)?dl\.getchu\.com\//, 
+	site: /^http\:\/\/dl\.getchu\.com\//, 
 	cookies: ['ADULT_GATE=1;path=/;domain=.getchu.com;' + EXPIRATION], 
 	flagOrPath: 'ADULT_GATE='
 }, {
-	site: /^http\:\/\/([^\.]*\.)?(dm5|jpmanga)\.com\//, 
+	site: /^http\:\/\/([^\.\/]+?\.)?(dm5|jpmanga)\.com\//, 
 	cookies: ['isAdult=1;path=/;' + EXPIRATION], 
 	flagOrPath: 'isAdult='
 }, {
-	site: /^http\:\/\/([^\.]*\.)?dlsite\.com\//, 
+	site: /^http\:\/\/([^\.\/]+?\.)?dlsite\.com\//, 
 	cookies: ['adultchecked=1;path=/;' + EXPIRATION], 
 	flagOrPath: 'adultchecked='
 }, {
-	site: /^https?\:\/\/([^\.]*\.)?toranoana\.jp\//, 
+	site: /^https?\:\/\/([^\.\/]+?\.)?toranoana\.jp\//, 
 	cookies: ['afg=0;path=/;domain=toranoana.jp;' + EXPIRATION], 
 	flagOrPath: 'afg='
 }, {
@@ -167,7 +167,7 @@ while(i--) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-	if(/^https?\:\/\/([^\.\/]+\.)?amazon\.co\.jp/.test(url)) {
+	if(/^https?\:\/\/([^\.\/]+?\.)?amazon\.co\.jp/.test(url)) {
 		processAmazonCoJp()
 	}
 }, false)
